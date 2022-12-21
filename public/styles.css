@@ -54,3 +54,8 @@ table {
 ::-webkit-scrollbar-thumb {
     background: #888;
 }
+
+a{
+    text-decoration: none;
+    color: inherit;
+}

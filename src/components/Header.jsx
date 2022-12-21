@@ -5,7 +5,7 @@ import Flex from "../ui/Flex";
 import LoginIcon from '@mui/icons-material/Login';
 import Face6Icon from '@mui/icons-material/Face6';
 import MenuIcon from '@mui/icons-material/Menu';
-
+import Link from "../ui/Link"
 
 
 const isLogin = true
@@ -25,16 +25,16 @@ const Header = () => {
 
 
     return (
-        <AppBar position="static" sx={{bgcolor:"bg.secondary", color:"text.main", padding:1, boxShadow:'none'}}>
-            <Toolbar sx={{display:"flex", justifyContent:"space-between"}}>
+        <AppBar position="static" sx={{bgcolor: "bg.secondary", color: "text.main", padding: 1, boxShadow: 'none'}}>
+            <Toolbar sx={{display: "flex", justifyContent: "space-between"}}>
 
-                <Flex alignItems="center" display={{xs:"none", md:"flex"}}>
+                <Flex alignItems="center" display={{xs: "none", md: "flex"}}>
                     <TaskAltIcon color="primary"/>
                     <Typography fontSize="24px">
                         T&T Management
                     </Typography>
                 </Flex>
-                <Flex cursor="pointer" onClick={handleClick} display={{xs:"flex", md:"none"}}><MenuIcon/></Flex>
+                <Flex cursor="pointer" onClick={handleClick} display={{xs: "flex", md: "none"}}><MenuIcon/></Flex>
                 <Popover
                     open={open}
                     anchorEl={anchorEl}
@@ -46,24 +46,36 @@ const Header = () => {
                 >
                     <List>
                         <ListItem>
-                            <Typography>
-                                Dashboard
-                            </Typography>
+                            <Link to="/dashboard">
+                                <Typography>
+                                    Dashboard
+                                </Typography>
+                            </Link>
+
                         </ListItem>
                         <ListItem>
-                            <Typography>
-                                My Task
-                            </Typography>
+                            <Link to="/">
+                                <Typography>
+                                    My Task
+                                </Typography>
+                            </Link>
+
                         </ListItem>
                         <ListItem>
-                            <Typography>
-                                Projects
-                            </Typography>
+                            <Link to="/projects">
+                                <Typography>
+                                    Projects
+                                </Typography>
+                            </Link>
+
                         </ListItem>
                         <ListItem>
-                            <Typography>
-                                Analytics
-                            </Typography>
+                            <Link to="/analytics">
+                                <Typography>
+                                    Analytics
+                                </Typography>
+                            </Link>
+
                         </ListItem>
                     </List>
                 </Popover>
@@ -75,7 +87,8 @@ const Header = () => {
                 {/*    label=">Search Task"*/}
                 {/*/>*/}
                 {
-                    isLogin ? <Face6Icon color="primary.main" cursor="pointer"/> : <LoginIcon color="primary.main" cursor="pointer"/>
+                    isLogin ? <Face6Icon color="primary.main" cursor="pointer"/> :
+                        <LoginIcon color="primary.main" cursor="pointer"/>
                 }
             </Toolbar>
         </AppBar>

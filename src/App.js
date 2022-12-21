@@ -1,23 +1,23 @@
-import {Box, Stack} from "@mui/material";
-import Header from "./components/Header";
-import Flex from "./ui/Flex";
-import SideNavigation from "./components/SideNavigation";
 import MyTasks from "./pages/MyTasks";
+import {Route, Routes} from "react-router";
+import Layout from "./Layout";
+import Dashboard from "./pages/Dashboard";
+import Projects from "./pages/Projects";
+import Analytics from "./pages/Analytics";
 
 
 
 function App() {
     return (
-        <Box sx={{overflowX:"hidden"}} className="App">
-            <Header/>
-            <Flex minHeight="90vh">
-                <SideNavigation minW="10vw"/>
-                <Stack p={1} bgcolor="bg.main" width="100%">
-                    <MyTasks/>
-                </Stack>
-            </Flex>
+        <Routes>
+            <Route path="/" element={<Layout/>}>
+                <Route index element={<MyTasks/>}/>
+                <Route path="/dashboard" element={<Dashboard/>}/>
+                <Route path="/projects" element={<Projects/>}/>
+                <Route path="/analytics" element={<Analytics/>}/>
 
-        </Box>
+            </Route>
+        </Routes>
     );
 }
 

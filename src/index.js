@@ -5,8 +5,10 @@ import {ThemeProvider} from "@mui/material";
 import {createTheme} from "@mui/material";
 import {setupStore} from "./store/store";
 import {Provider} from "react-redux";
+import {BrowserRouter} from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 const theme = createTheme({
     palette:{
         primary: {main:"#6C5DD3"},
@@ -15,9 +17,16 @@ const theme = createTheme({
     }
 })
 const store = setupStore()
+
+
 root.render(
       <Provider store={store}>
-          <ThemeProvider theme={theme}> <App/></ThemeProvider>
+          <BrowserRouter>
+              <ThemeProvider theme={theme}>
+                  <App/>
+              </ThemeProvider>
+          </BrowserRouter>
+
 
       </Provider>
 
