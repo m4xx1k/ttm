@@ -8,34 +8,36 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 const SideNavigation = ({minW}) => {
     return (
-        <Flex display={{xs:"none",md:"flex"}} id="sidenavigation" color="text.main" flexDirection="column" minWidth={minW}>
-            <List>
-                <ListItem>
-                    <DashboardIcon color="primary"/>
-                    <Typography>
-                        Dashboard
-                    </Typography>
-                </ListItem>
-                <ListItem>
-                    <FormatListBulletedIcon color="primary"/>
-                    <Typography>
-                        My Task
-                    </Typography>
-                </ListItem>
-                <ListItem>
-                    <AssignmentIcon color="primary"/>
-                    <Typography>
-                        Projects
-                    </Typography>
-                </ListItem>
-                <ListItem>
-                    <BarChartIcon color="primary"/>
-                    <Typography>
-                        Analytics
-                    </Typography>
-                </ListItem>
-            </List>
-        </Flex>
+
+            <Flex display={{xs: "none", md: "flex"}} id="sidenavigation" color="text.main" flexDirection="column"
+                  minWidth={minW}>
+                <List>
+                    <ListItem>
+                        <DashboardIcon color="primary"/>
+                        <Typography>
+                            Dashboard
+                        </Typography>
+                    </ListItem>
+                    <ListItem>
+                        <FormatListBulletedIcon color="primary"/>
+                        <Typography>
+                            My Task
+                        </Typography>
+                    </ListItem>
+                    <ListItem>
+                        <AssignmentIcon color="primary"/>
+                        <Typography>
+                            Projects
+                        </Typography>
+                    </ListItem>
+                    <ListItem>
+                        <BarChartIcon color="primary"/>
+                        <Typography>
+                            Analytics
+                        </Typography>
+                    </ListItem>
+                </List>
+            </Flex>
     );
 };
 

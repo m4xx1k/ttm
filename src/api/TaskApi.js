@@ -36,7 +36,7 @@ export const taskApi = createApi({
             }),
             invalidatesTags: ["Tasks"]
         }),
-        changeStatusTask: build.mutation({
+        changeTask: build.mutation({
             query(data){
                 const {id, body} = data
                 return {

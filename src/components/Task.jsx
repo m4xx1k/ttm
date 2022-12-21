@@ -1,43 +1,69 @@
 import React, {useState} from 'react';
-import {Card, Popover, Typography} from "@mui/material";
+import {
+    Card,
+    Collapse,
+    Dialog,
+    Divider,
+    List,
+    ListItem,
+    Popover,
+    Typography
+} from "@mui/material";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import AlarmIcon from "@mui/icons-material/Alarm";
 import Flex from "../ui/Flex";
 import dayjs from "dayjs";
 import Hashtag from "../ui/Hashtag";
 import MicroTask from "./MicroTask";
-import DeleteIcon from '@mui/icons-material/Delete';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import {taskApi} from "../api/TaskApi";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import TaskForm from "./TaskForm";
+
+const statuses = ["todo", "inprogress", "complete"]
 
 const Task = ({task}) => {
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const openPopover = Boolean(anchorEl);
+    const [openCollapse, setOpenCollapse] = useState(false)
     const [deleteTask] = taskApi.useDeleteTaskMutation()
     const handleDeleteTask = async (id) => await deleteTask(id)
-    const [anchorEl, setAnchorEl] = useState(null);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    const open = Boolean(anchorEl);
-
-
-
+    const [changeTask] = taskApi.useChangeTaskMutation()
+    const handleChangeTask = async (body) => {
+        await changeTask({id: task.id, body})
+    }
+    const [openDialog, setOpenDialog] = useState(false)
 
     return (
-        <Card  className="task"
-
-              sx={{cursor:"initial",padding: 2, margin: "8px 0", maxWidth: 380, borderRadius: 3}}
+        <Card className="task"
+              sx={{cursor: "initial", padding: 2, margin: "8px 0", minWidth: 200, maxWidth: 360, borderRadius: 3}}
         >
+            <Dialog
+                open={openDialog}
+                onClose={() => setOpenDialog(prev => !prev)}
+            >
+                <TaskForm handleCloseDialog={() => setOpenDialog(false)} handleSubmit={handleChangeTask}
+                          values={{...task, newht: {text: "", color: "#00ffff"}}}/>
+            </Dialog>
+
             <Flex justifyContent="space-between">
+
                 <Typography fontWeight="700" fontSize="20px" width="90%">
                     {task.title}
                 </Typography>
-                <MoreHorizIcon onClick={handleClick} cursor="pointer" width="10%"/>
+
+                <MoreHorizIcon onClick={(e) => setAnchorEl(e.currentTarget)} cursor="pointer" width="10%"/>
+
+
                 <Popover
-                    open={open}
+                    open={openPopover}
                     anchorEl={anchorEl}
-                    onClose={handleClose}
+                    onClose={() => setAnchorEl(null)}
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'right',
@@ -47,8 +73,49 @@ const Task = ({task}) => {
                         horizontal: 'left',
                     }}
                 >
-                    <Typography sx={{p: 2}}>The content of the Popover.</Typography>
+
+                    <List sx={{minWidth: 152}}>
+
+                        <ListItem sx={{cursor: 'pointer'}} onClick={() => setOpenDialog(true)}>
+                            <EditIcon/>
+                            <Typography>Edit</Typography>
+                        </ListItem>
+
+                        <ListItem sx={{cursor: 'pointer'}} onClick={() => setOpenCollapse(prev => !prev)}>
+                            <Flex alignItems="center" justifyContent="space-between">
+                                <MonitorHeartIcon/>
+                                <Typography>{task.status.toUpperCase()}</Typography>
+                                {openCollapse ? <ExpandLess/> : <ExpandMore/>}
+                            </Flex>
+                        </ListItem>
+
+                        <Collapse in={openCollapse} timeout="auto" unmountOnExit>
+                            <List component="div">
+                                {statuses.filter(st => st !== task.status).map(st =>
+                                    <ListItem sx={{cursor: 'pointer'}} key={st}
+                                              onClick={() => handleChangeTask({...task, status: st})}>
+                                        <Typography> - {st.toUpperCase()}</Typography>
+                                    </ListItem>
+                                )}
+                            </List>
+                        </Collapse>
+
+                        <Divider/>
+
+                        <ListItem sx={{cursor: 'pointer'}} onClick={() => handleDeleteTask(task.id)}>
+                            <DeleteIcon/>
+                            <Typography>Delete</Typography>
+                        </ListItem>
+
+                        <ListItem sx={{cursor: 'pointer'}}>
+                            <ArchiveIcon/>
+                            <Typography>Archive</Typography>
+                        </ListItem>
+
+                    </List>
+
                 </Popover>
+
             </Flex>
             <Flex flexWrap="wrap" gap={1}>
                 {
@@ -71,16 +138,11 @@ const Task = ({task}) => {
                 }
             </Flex>
 
-            <Flex justifyContent="space-between" margin="12px 0 0">
-                <Flex alignItems="center" color="grey">
-                    <AlarmIcon/>
-                    <Typography>
-                        {dayjs(task.ddl).format("DD MMM YYYY HH:mm")}
-                    </Typography>
-
-                </Flex>
-                <DeleteIcon color="primary"
-                    onClick={() => handleDeleteTask(task.id)}/>
+            <Flex alignItems="center" color="grey" marginTop={1}>
+                <AlarmIcon/>
+                <Typography>
+                    {dayjs(task.ddl).format("DD MMM YYYY HH:mm")}
+                </Typography>
             </Flex>
         </Card>
     );

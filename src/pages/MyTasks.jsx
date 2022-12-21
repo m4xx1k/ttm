@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Dialog, Stack, Typography} from "@mui/material";
-import NewTaskForm from "../components/NewTaskForm";
+import {Box, Dialog, Stack, Typography} from "@mui/material";
+import TaskForm from "../components/TaskForm";
 import {taskApi} from "../api/TaskApi";
 import Flex from "../ui/Flex";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -15,20 +15,21 @@ const MyTasks = () => {
     const handleClose = () => setOpen(false);
 
     const [createTask] = taskApi.useCreateTaskMutation()
-    const [changeStatus] = taskApi.useChangeStatusTaskMutation()
+    const [changeTask] = taskApi.useChangeTaskMutation()
 
     const handleAddNewTask = async (task) => {
         await createTask(task)
         setOpen(false)
     }
 
+
     const [columns, setColumns] = useState([])
 
-    const {data: completeTasks, isLoading: isLoadingCompleteTasks} = taskApi.useFetchTasksByStatusQuery("complete")
-    const {data: todoTasks, isLoading: isLoadingToDoTasks} = taskApi.useFetchTasksByStatusQuery("todo")
+    const {data: completeTasks, isSuccess: isSuccessCompleteTasks} = taskApi.useFetchTasksByStatusQuery("complete")
+    const {data: todoTasks, isSuccess: isSuccessToDoTasks} = taskApi.useFetchTasksByStatusQuery("todo")
     const {
         data: inprogressTasks,
-        isLoading: isLoadingInprogressTasks
+        isSuccess: isSuccessInprogressTasks
     } = taskApi.useFetchTasksByStatusQuery("inprogress")
 
     useEffect(() => {
@@ -37,7 +38,7 @@ const MyTasks = () => {
             {status: "inprogress", tasks: inprogressTasks},
             {status: "complete", tasks: completeTasks}
         ])
-    }, [isLoadingInprogressTasks, isLoadingToDoTasks, isLoadingCompleteTasks, todoTasks, inprogressTasks, completeTasks])
+    }, [isSuccessInprogressTasks, isSuccessToDoTasks, isSuccessCompleteTasks, todoTasks, inprogressTasks, completeTasks])
 
     const getTaskById = (id, status) => {
         let res
@@ -57,27 +58,27 @@ const MyTasks = () => {
         const taskId = res.source.index
         const task = getTaskById(taskId, res.source.droppableId)
         if (!!res.destination)
-            await changeStatus({
+            await changeTask({
                 id: taskId,
                 body: {...task, status: res.destination.droppableId}
             })
     }
 
 
-
     return (
-        <>
+        <Box>
 
-            <AddCircleIcon sx={{marginRight:1}} cursor="pointer" color="primary" fontSize="large" onClick={handleClickOpen}/>
+            <AddCircleIcon sx={{marginRight: 1}} cursor="pointer" color="primary" fontSize="large"
+                           onClick={handleClickOpen}/>
             <Dialog
                 open={open}
                 onClose={handleClose}
             >
-                <NewTaskForm handleSubmit={handleAddNewTask}/>
+                <TaskForm handleSubmit={handleAddNewTask}/>
             </Dialog>
 
             <DragDropContext onDragEnd={onDragEnd}>
-                <Flex gap={1}>
+                <Flex justifyContent="space-between" gap={1} sx={{minHeight:"80vh",maxWidth: "100vw", overflowX: "scroll"}}>
                     {columns.map((column) => {
                         return (
                             <Droppable key={column.status} droppableId={column.status}>
@@ -87,7 +88,13 @@ const MyTasks = () => {
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
                                     >
-                                        <Typography>{column.status}</Typography>
+                                        <Flex alignItems="center">
+                                            <Typography marginX={1} fontSize={19}
+                                                        fontWeight="700">{column.status.toUpperCase()}</Typography>
+                                            <Typography
+                                                color="text.secondary">{`(${column.tasks?.length})`}</Typography>
+                                        </Flex>
+
                                         {column.tasks?.map((task) => (
                                             <Draggable
                                                 key={task.id}
@@ -114,7 +121,7 @@ const MyTasks = () => {
                     })}
                 </Flex>
             </DragDropContext>
-        </>
+        </Box>
     );
 };
 

@@ -23,7 +23,7 @@ const initialValues = {
     newht: {text: "", color: "#00ffff"},
 }
 
-const NewTaskForm = ({w, handleSubmit}) => {
+const TaskForm = ({handleSubmit, values = initialValues,handleCloseDialog}) => {
 
     const validationSchema = yup.object().shape({
         title: yup.string().min(3, "Too short!").max(38, "Too long!").required("Required!"),
@@ -40,12 +40,17 @@ const NewTaskForm = ({w, handleSubmit}) => {
 
 
     const formik = useFormik({
-        initialValues: initialValues,
+        initialValues: values,
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            handleSubmit({...values, status: "todo"})
+            const status = values.hasOwnProperty("status") ? values.status : "todo"
+            handleSubmit({...values, status: status})
             formik.resetForm()
+            if (typeof handleCloseDialog === 'function') {
+                handleCloseDialog()
+            }
         }
+
 
     })
 
@@ -87,10 +92,9 @@ const NewTaskForm = ({w, handleSubmit}) => {
     }
 
     return (
-        <Stack maxWidth={400} width={w} as="form" onSubmit={formik.handleSubmit} p={3} sx={{borderRadius: 10}} gap={2}
+        <Stack maxWidth={400} as="form" onSubmit={formik.handleSubmit} p={3} sx={{borderRadius: 10}} gap={2}
                bgcolor="#fff">
             <TextField
-
                 id="title"
                 name="title"
                 label="Title"
@@ -156,6 +160,7 @@ const NewTaskForm = ({w, handleSubmit}) => {
 
             <Stack gap="8px" direction="row" alignItems="center">
                 <TextField
+                    fullWidth
                     id="newHashtag"
                     name="newHashtag"
                     label="Add Hashtag"
@@ -167,7 +172,7 @@ const NewTaskForm = ({w, handleSubmit}) => {
                 <AddBoxIcon fontSize="large" color="primary" cursor="pointer" onClick={addHashtag}/>
 
             </Stack>
-            <HuePicker width={w} color={formik.values.newht.color}
+            <HuePicker width="100%" color={formik.values.newht.color}
 
                        onChange={(color) => formik.setFieldValue("newht", {...formik.values.newht, color: color.hex}
                        )}
@@ -197,4 +202,4 @@ const NewTaskForm = ({w, handleSubmit}) => {
     );
 };
 
-export default NewTaskForm;
+export default TaskForm;
