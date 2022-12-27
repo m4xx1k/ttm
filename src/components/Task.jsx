@@ -23,12 +23,40 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
 import TaskForm from "./TaskForm";
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
+import { useStopwatch } from 'react-timer-hook';
 
 const statuses = ["todo", "inprogress", "complete"]
+const secToTime = (seconds) =>{
+    let date = new Date(seconds * 1000);
+    let hh = date.getUTCHours();
+    let mm = date.getUTCMinutes();
+    let ss = date.getSeconds();
 
+    if (hh < 10) {hh = "0"+hh;}
+    if (mm < 10) {mm = "0"+mm;}
+    if (ss < 10) {ss = "0"+ss;}
+
+    if(hh==="00") return mm+":"+ss
+
+    return  hh+":"+mm+":"+ss;
+}
 const Task = ({task}) => {
-    const [anchorEl, setAnchorEl] = useState(null);
 
+    const {
+        seconds,
+        minutes,
+        hours,
+        days,
+        isRunning,
+        start,
+        pause,
+        reset,
+    } = useStopwatch({ autoStart: false });
+
+    const [anchorEl, setAnchorEl] = useState(null);
     const openPopover = Boolean(anchorEl);
     const [openCollapse, setOpenCollapse] = useState(false)
     const [deleteTask] = taskApi.useDeleteTaskMutation()
@@ -38,6 +66,18 @@ const Task = ({task}) => {
         await changeTask({id: task.id, body})
     }
     const [openDialog, setOpenDialog] = useState(false)
+
+
+    const handleStartWorking = async () => {
+        start()
+    }
+
+    const handleStopWorking = async () => {
+        pause()
+        const started = new Date(task.started)
+        const newSpentTime = Math.abs((Date.now()-started.getTime())/1000)
+        await handleChangeTask({...task, isWorkingNow:false, spentTime: task.spentTime + newSpentTime})
+    }
 
     return (
         <Card className="task"
@@ -79,6 +119,22 @@ const Task = ({task}) => {
                         <ListItem sx={{cursor: 'pointer'}} onClick={() => setOpenDialog(true)}>
                             <EditIcon/>
                             <Typography>Edit</Typography>
+                        </ListItem>
+
+                        <ListItem sx={{cursor: 'pointer'}}>
+                            {
+
+                                task.isWorkingNow ?
+                                    <Flex onClick={()=>handleStopWorking()}>
+                                        <StopCircleIcon color="error"/>
+                                        <Typography>Stop</Typography>
+                                    </Flex>
+                                    :
+                                    <Flex onClick={()=>handleChangeTask({...task, isWorkingNow:true, started:Date.now()})}>
+                                        <PlayCircleFilledWhiteIcon color="success"/>
+                                        <Typography>Start</Typography>
+                                    </Flex>
+                            }
                         </ListItem>
 
                         <ListItem sx={{cursor: 'pointer'}} onClick={() => setOpenCollapse(prev => !prev)}>
@@ -138,11 +194,21 @@ const Task = ({task}) => {
                 }
             </Flex>
 
-            <Flex alignItems="center" color="grey" marginTop={1}>
-                <AlarmIcon/>
-                <Typography>
-                    {dayjs(task.ddl).format("DD MMM YYYY HH:mm")}
-                </Typography>
+            <Flex alignItems="center" justifyContent="space-between" color="grey" marginTop={1}>
+                <Flex>
+                    <AlarmIcon/>
+                    <Typography>
+                        {dayjs(task.ddl).format("DD MMM YYYY HH:mm")}
+                    </Typography>
+                </Flex>
+                <Flex>
+                    <HourglassTopIcon/>
+                    <Typography>
+                        {secToTime(task.spentTime)}
+                    </Typography>
+
+                </Flex>
+
             </Flex>
         </Card>
     );

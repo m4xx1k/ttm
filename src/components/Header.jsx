@@ -80,12 +80,6 @@ const Header = () => {
                     </List>
                 </Popover>
 
-                {/*<TextField*/}
-                {/*    sx={{width:"25%",borderRadius:"20px"}}*/}
-                {/*    id="search"*/}
-                {/*    name="search"*/}
-                {/*    label=">Search Task"*/}
-                {/*/>*/}
                 {
                     isLogin ? <Face6Icon color="primary.main" cursor="pointer"/> :
                         <LoginIcon color="primary.main" cursor="pointer"/>

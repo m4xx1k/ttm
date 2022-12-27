@@ -95,7 +95,7 @@ const MyTasks = () => {
                                                 color="text.secondary">{`(${column.tasks?.length})`}</Typography>
                                         </Flex>
 
-                                        {column.tasks?.map((task) => (
+                                        {column.tasks?.map((task, i) => (
                                             <Draggable
                                                 key={task.id}
                                                 draggableId={task.id.toString()}
