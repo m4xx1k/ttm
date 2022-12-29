@@ -7,11 +7,15 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import Link from "../ui/Link";
 
-const SideNavigation = ({minW}) => {
+const SideNavigation = ({w}) => {
     return (
 
-        <Flex display={{xs: "none", md: "flex"}} id="sidenavigation" color="text.main" flexDirection="column"
-              minWidth={minW}>
+        <Flex sx={{position:"fixed", bgcolor:"bg.secondary"}}
+              display={{xs: "none", md: "flex"}}
+                  color="text.main"
+              flexDirection="column"
+              width={w}
+        >
             <List>
                 <ListItem>
                     <Link to="/dashboard">

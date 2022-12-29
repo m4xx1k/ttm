@@ -46,7 +46,10 @@ export const taskApi = createApi({
                 }
                 },
             invalidatesTags: ["Tasks"]
-
+        }),
+        searchTasks: build.query({
+            query:(search)=>`/tasks?q=${search}`
         })
+
     })
 })

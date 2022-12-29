@@ -8,10 +8,10 @@ import {Box, Stack} from "@mui/material";
 const Layout = () => {
     return (
         <Box sx={{overflowX:"hidden"}} className="App">
-            <Header/>
-            <Flex minHeight="90vh">
-                <SideNavigation minW="10vw"/>
-                <Stack p={1} bgcolor="bg.main" width="100%">
+            <Header h="50px"/>
+            <Flex marginTop="50px" minHeight="90vh">
+                <SideNavigation w="140px"/>
+                <Stack marginLeft={{xs: 0, md: "140px"}} p={1} bgcolor="bg.main" width="100%" height="95vh">
                     <Outlet/>
                 </Stack>
             </Flex>

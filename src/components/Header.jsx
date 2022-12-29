@@ -10,8 +10,7 @@ import Link from "../ui/Link"
 
 const isLogin = true
 
-const Header = () => {
-
+const Header = ({h}) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
@@ -25,7 +24,7 @@ const Header = () => {
 
 
     return (
-        <AppBar position="static" sx={{bgcolor: "bg.secondary", color: "text.main", padding: 1, boxShadow: 'none'}}>
+        <AppBar position="fixed" sx={{bgcolor: "bg.secondary", color: "text.main", height:h, boxShadow: 'none'}}>
             <Toolbar sx={{display: "flex", justifyContent: "space-between"}}>
 
                 <Flex alignItems="center" display={{xs: "none", md: "flex"}}>

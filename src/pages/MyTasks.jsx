@@ -6,25 +6,23 @@ import Flex from "../ui/Flex";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Task from "../components/Task";
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
-
+import Search from "../components/Search";
 
 const MyTasks = () => {
-    const [open, setOpen] = useState(false);
+    const [openNewTaskForm, setOpenNewTaskForm] = useState(false);
+    const [openSearch, setOpenSearch] = useState(false)
 
-    const handleClickOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
 
     const [createTask] = taskApi.useCreateTaskMutation()
     const [changeTask] = taskApi.useChangeTaskMutation()
 
     const handleAddNewTask = async (task) => {
         await createTask(task)
-        setOpen(false)
+        setOpenNewTaskForm(false)
     }
 
 
     const [columns, setColumns] = useState([])
-
     const {data: completeTasks, isSuccess: isSuccessCompleteTasks} = taskApi.useFetchTasksByStatusQuery("complete")
     const {data: todoTasks, isSuccess: isSuccessToDoTasks} = taskApi.useFetchTasksByStatusQuery("todo")
     const {
@@ -33,11 +31,13 @@ const MyTasks = () => {
     } = taskApi.useFetchTasksByStatusQuery("inprogress")
 
     useEffect(() => {
+
         setColumns([
             {status: "todo", tasks: todoTasks},
             {status: "inprogress", tasks: inprogressTasks},
             {status: "complete", tasks: completeTasks}
         ])
+
     }, [isSuccessInprogressTasks, isSuccessToDoTasks, isSuccessCompleteTasks, todoTasks, inprogressTasks, completeTasks])
 
     const getTaskById = (id, status) => {
@@ -54,31 +54,36 @@ const MyTasks = () => {
     }
 
     const onDragEnd = async (res) => {
-        console.log(res)
         const taskId = res.source.index
         const task = getTaskById(taskId, res.source.droppableId)
-        if (!!res.destination)
+        if (!!res.destination) {
+
             await changeTask({
                 id: taskId,
                 body: {...task, status: res.destination.droppableId}
             })
+        }
     }
 
 
     return (
         <Box>
+            <Flex justifyContent="space-between" marginX={2}>
+                <AddCircleIcon  cursor="pointer" color="primary" fontSize="large"
+                               onClick={() => setOpenNewTaskForm(true)}/>
+                <Search openSearch={openSearch} setOpenSearch={setOpenSearch}/>
+            </Flex>
 
-            <AddCircleIcon sx={{marginRight: 1}} cursor="pointer" color="primary" fontSize="large"
-                           onClick={handleClickOpen}/>
             <Dialog
-                open={open}
-                onClose={handleClose}
+                open={openNewTaskForm}
+                onClose={() => setOpenNewTaskForm(false)}
             >
                 <TaskForm handleSubmit={handleAddNewTask}/>
             </Dialog>
 
             <DragDropContext onDragEnd={onDragEnd}>
-                <Flex justifyContent="space-between" gap={1} sx={{minHeight:"80vh",maxWidth: "100vw", overflowX: "scroll"}}>
+                <Flex justifyContent="space-between" gap={1}
+                      sx={{minHeight: "80vh", maxWidth: "100vw", overflowX: "scroll"}}>
                     {columns.map((column) => {
                         return (
                             <Droppable key={column.status} droppableId={column.status}>
@@ -95,11 +100,11 @@ const MyTasks = () => {
                                                 color="text.secondary">{`(${column.tasks?.length})`}</Typography>
                                         </Flex>
 
-                                        {column.tasks?.map((task, i) => (
+                                        {column.tasks?.map((task) => (
                                             <Draggable
                                                 key={task.id}
                                                 draggableId={task.id.toString()}
-                                                index={task.id}
+                                                index={task.order || task.id}
                                             >
                                                 {(provided) => (
                                                     <div

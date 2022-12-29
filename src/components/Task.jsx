@@ -26,35 +26,29 @@ import TaskForm from "./TaskForm";
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
-import { useStopwatch } from 'react-timer-hook';
 
 const statuses = ["todo", "inprogress", "complete"]
-const secToTime = (seconds) =>{
+const secToTime = (seconds) => {
     let date = new Date(seconds * 1000);
     let hh = date.getUTCHours();
     let mm = date.getUTCMinutes();
     let ss = date.getSeconds();
 
-    if (hh < 10) {hh = "0"+hh;}
-    if (mm < 10) {mm = "0"+mm;}
-    if (ss < 10) {ss = "0"+ss;}
+    if (hh < 10) {
+        hh = "0" + hh;
+    }
+    if (mm < 10) {
+        mm = "0" + mm;
+    }
+    if (ss < 10) {
+        ss = "0" + ss;
+    }
 
-    if(hh==="00") return mm+":"+ss
+    if (hh === "00") return mm + ":" + ss
 
-    return  hh+":"+mm+":"+ss;
+    return hh + ":" + mm + ":" + ss;
 }
-const Task = ({task}) => {
-
-    const {
-        seconds,
-        minutes,
-        hours,
-        days,
-        isRunning,
-        start,
-        pause,
-        reset,
-    } = useStopwatch({ autoStart: false });
+const Task = ({task, maxW=380}) => {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const openPopover = Boolean(anchorEl);
@@ -68,27 +62,32 @@ const Task = ({task}) => {
     const [openDialog, setOpenDialog] = useState(false)
 
 
-    const handleStartWorking = async () => {
-        start()
+    const getClockColor = () => {
+        const now = dayjs()
+        const ddl = dayjs(task.ddl)
+        const sec = ddl.diff(now, "seconds")
+        if(sec>86400) return "success"
+        if(sec>43200) return 'warning'
+        return "error"
     }
-
+    const clockColor = getClockColor()
     const handleStopWorking = async () => {
-        pause()
         const started = new Date(task.started)
-        const newSpentTime = Math.abs((Date.now()-started.getTime())/1000)
-        await handleChangeTask({...task, isWorkingNow:false, spentTime: task.spentTime + newSpentTime})
+        const newSpentTime = Math.abs((Date.now() - started.getTime()) / 1000)
+        await handleChangeTask({...task, isWorkingNow: false, spentTime: task.spentTime + newSpentTime})
     }
 
     return (
         <Card className="task"
-              sx={{cursor: "initial", padding: 2, margin: "8px 0", minWidth: 200, maxWidth: 360, borderRadius: 3}}
+              sx={{cursor: "initial", padding: 2, margin: "8px 0", minWidth: 200, maxWidth: maxW, borderRadius: 3}}
         >
             <Dialog
                 open={openDialog}
                 onClose={() => setOpenDialog(prev => !prev)}
             >
                 <TaskForm handleCloseDialog={() => setOpenDialog(false)} handleSubmit={handleChangeTask}
-                          values={{...task, newht: {text: "", color: "#00ffff"}}}/>
+                          values={{...task, newht: {text: "", color: "#00ffff"}}}
+                />
             </Dialog>
 
             <Flex justifyContent="space-between">
@@ -117,7 +116,7 @@ const Task = ({task}) => {
                     <List sx={{minWidth: 152}}>
 
                         <ListItem sx={{cursor: 'pointer'}} onClick={() => setOpenDialog(true)}>
-                            <EditIcon/>
+                            <EditIcon color="primary"/>
                             <Typography>Edit</Typography>
                         </ListItem>
 
@@ -125,12 +124,16 @@ const Task = ({task}) => {
                             {
 
                                 task.isWorkingNow ?
-                                    <Flex onClick={()=>handleStopWorking()}>
+                                    <Flex onClick={() => handleStopWorking()}>
                                         <StopCircleIcon color="error"/>
                                         <Typography>Stop</Typography>
                                     </Flex>
                                     :
-                                    <Flex onClick={()=>handleChangeTask({...task, isWorkingNow:true, started:Date.now()})}>
+                                    <Flex onClick={() => handleChangeTask({
+                                        ...task,
+                                        isWorkingNow: true,
+                                        started: Date.now()
+                                    })}>
                                         <PlayCircleFilledWhiteIcon color="success"/>
                                         <Typography>Start</Typography>
                                     </Flex>
@@ -139,7 +142,7 @@ const Task = ({task}) => {
 
                         <ListItem sx={{cursor: 'pointer'}} onClick={() => setOpenCollapse(prev => !prev)}>
                             <Flex alignItems="center" justifyContent="space-between">
-                                <MonitorHeartIcon/>
+                                <MonitorHeartIcon color="primary"/>
                                 <Typography>{task.status.toUpperCase()}</Typography>
                                 {openCollapse ? <ExpandLess/> : <ExpandMore/>}
                             </Flex>
@@ -159,7 +162,7 @@ const Task = ({task}) => {
                         <Divider/>
 
                         <ListItem sx={{cursor: 'pointer'}} onClick={() => handleDeleteTask(task.id)}>
-                            <DeleteIcon/>
+                            <DeleteIcon color="error"/>
                             <Typography>Delete</Typography>
                         </ListItem>
 
@@ -196,13 +199,30 @@ const Task = ({task}) => {
 
             <Flex alignItems="center" justifyContent="space-between" color="grey" marginTop={1}>
                 <Flex>
-                    <AlarmIcon/>
+                    <AlarmIcon color={clockColor}/>
                     <Typography>
                         {dayjs(task.ddl).format("DD MMM YYYY HH:mm")}
                     </Typography>
                 </Flex>
+
                 <Flex>
-                    <HourglassTopIcon/>
+                    <HourglassTopIcon color="primary" sx={
+                        task.isWorkingNow
+                            ?
+                            {
+                                animation: "spin 2s linear infinite",
+                                "@keyframes spin": {
+                                    "0%": {
+                                        transform: "rotate(360deg)",
+                                    },
+                                    "100%": {
+                                        transform: "rotate(0deg)",
+                                    },
+                                }
+                            }
+                            :
+                            null
+                    }/>
                     <Typography>
                         {secToTime(task.spentTime)}
                     </Typography>

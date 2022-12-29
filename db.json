@@ -1,24 +1,6 @@
 {
   "tasks": [
     {
-      "title": "the 2",
-      "ddl": "12.30.2022 16:23",
-      "desc": "the minimum time for the task is 15 minutes the minimum time for the task is 15 minutes",
-      "hashtags": [],
-      "microtasks": [],
-      "microtask": "",
-      "status": "inprogress",
-      "id": 2,
-      "order": 2,
-      "newht": {
-        "text": "",
-        "color": "#00ffff"
-      },
-      "isWorkingNow": false,
-      "spentTime": 0,
-      "started": 0
-    },
-    {
       "title": "the 35",
       "ddl": "12.30.2022 16:23",
       "desc": "the minimum time for the task is 15 minutes the minimum time for the task is 15 minutes",
@@ -33,40 +15,26 @@
         "color": "#00ffff"
       },
       "isWorkingNow": false,
-      "spentTime": 0,
-      "started": "0"
+      "spentTime": 10.27,
+      "started": 1672330562412
     },
     {
       "title": "the 4",
-      "ddl": "12.23.2022 16:23",
+      "ddl": "12.31.2022 16:23",
       "desc": "the minimum time for the task is 15 minutes the minimum time for the task is 15 minutes",
       "hashtags": [],
       "microtasks": [],
       "microtask": "",
-      "status": "todo",
+      "status": "complete",
       "id": 4,
-      "order": 4,
+      "order": 2,
       "newht": {
         "text": "",
         "color": "#00ffff"
       },
       "isWorkingNow": false,
-      "spentTime": 2.856,
-      "started": 1672155052221
-    },
-    {
-      "title": "the 5",
-      "ddl": "12.19.2022 16:23",
-      "desc": "the minimum time for the task is 15 minutes the minimum time for the task is 15 minutes",
-      "hashtags": [],
-      "microtasks": [],
-      "microtask": "",
-      "status": "todo",
-      "id": 5,
-      "order": 5,
-      "isWorkingNow": false,
-      "spentTime": 0,
-      "started": 0
+      "spentTime": 552.592,
+      "started": 1672175875453
     },
     {
       "title": "the 1",
@@ -75,16 +43,64 @@
       "hashtags": [],
       "microtasks": [],
       "microtask": "",
-      "status": "complete",
+      "status": "todo",
       "id": 6,
-      "order": 6,
+      "order": 1,
       "newht": {
         "text": "",
         "color": "#00ffff"
       },
       "isWorkingNow": false,
-      "spentTime": 0,
-      "started": 0
+      "spentTime": 821.362,
+      "started": 1672258714455
+    },
+    {
+      "title": "MyTasks Page",
+      "ddl": "12.30.2022 18:00",
+      "desc": "i need to finish MyTasks page for beta version. \nadd styles, add search, add time to deadline indicator",
+      "hashtags": [
+        {
+          "text": "api",
+          "color": "#00ffff"
+        },
+        {
+          "text": "styles",
+          "color": "#00ffff"
+        },
+        {
+          "text": "component",
+          "color": "#00ffff"
+        },
+        {
+          "text": "etc",
+          "color": "#2bff00"
+        }
+      ],
+      "microtasks": [
+        {
+          "status": false,
+          "text": "search"
+        },
+        {
+          "status": false,
+          "text": "styles"
+        },
+        {
+          "status": false,
+          "text": "t2ddl indicator"
+        }
+      ],
+      "microtask": "",
+      "newht": {
+        "text": "",
+        "color": "#00ffff"
+      },
+      "status": "inprogress",
+      "spentTime": 5353.741,
+      "id": 7,
+      "isWorkingNow": false,
+      "started": 1672259149844,
+      "order": 1
     }
   ]
 }

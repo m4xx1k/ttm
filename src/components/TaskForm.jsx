@@ -24,7 +24,6 @@ const initialValues = {
 }
 
 const TaskForm = ({handleSubmit, values = initialValues,handleCloseDialog}) => {
-
     const validationSchema = yup.object().shape({
         title: yup.string().min(3, "Too short!").max(38, "Too long!").required("Required!"),
         desc: yup.string().min(5, "Too short!").max(200, "Too long!").required("Required!"),
@@ -44,7 +43,9 @@ const TaskForm = ({handleSubmit, values = initialValues,handleCloseDialog}) => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             const status = values.hasOwnProperty("status") ? values.status : "todo"
-            handleSubmit({...values, status: status})
+            const finalValues = {...values, status}
+            if(!values.hasOwnProperty("spentTime")) finalValues.spentTime = 0
+            handleSubmit(finalValues)
             formik.resetForm()
             if (typeof handleCloseDialog === 'function') {
                 handleCloseDialog()
@@ -70,7 +71,6 @@ const TaskForm = ({handleSubmit, values = initialValues,handleCloseDialog}) => {
     const deleteHashtag = (hashtag) => {
 
         const newHashtags = formik.values.hashtags.filter(ht => ht.text !== hashtag.text)
-        console.log(hashtag, newHashtags)
         formik.setFieldValue("hashtags", newHashtags)
     }
 
@@ -83,7 +83,6 @@ const TaskForm = ({handleSubmit, values = initialValues,handleCloseDialog}) => {
             text: mt
         }])
         formik.setFieldValue("microtask", "")
-        console.log(mt, formik.values.microtasks, [...mts, mt])
     }
 
     const handleDeleteMT = (microtask) => {
@@ -167,7 +166,6 @@ const TaskForm = ({handleSubmit, values = initialValues,handleCloseDialog}) => {
                     value={formik.values.newht.text}
                     onChange={(e) => formik.setFieldValue("newht", {...formik.values.newht, text: e.target.value})}
                     error={!!formik.errors.newht}
-                    //helperText={formik.touched.newht && formik.errors.newht.text}
                 />
                 <AddBoxIcon fontSize="large" color="primary" cursor="pointer" onClick={addHashtag}/>
 
