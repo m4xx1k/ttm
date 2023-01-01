@@ -73,10 +73,10 @@
         "color": "#00ffff"
       },
       "status": "inprogress",
-      "spentTime": 55.55500000000001,
+      "spentTime": 358.581,
       "id": 7,
-      "isWorkingNow": false,
-      "started": 1672536536064,
+      "isWorkingNow": true,
+      "started": 1672538240212,
       "order": 1
     },
     {
@@ -91,8 +91,10 @@
         "color": "#00ffff"
       },
       "status": "todo",
-      "spentTime": 0,
-      "id": 8
+      "spentTime": 2.376,
+      "id": 8,
+      "isWorkingNow": false,
+      "started": 1672537803375
     },
     {
       "title": "the minimum",

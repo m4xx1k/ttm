@@ -50,9 +50,18 @@ const secToTime = (ms) => {
 }
 const Task = ({task, maxW = 380}) => {
     //SW --- stopwatch
-    const [timeSW, setTimeSW] = useState(task.spentTime * 1000)
-    const [startSW, setStartSW] = useState(false)
+    const inititalTimeSW = ()=>{
+        const started = new Date(task.started)
+
+        if(task.isWorkingNow){
+            return task.spentTime + Math.abs((Date.now() - started.getTime()) / 1000)
+        }
+        return  task.spentTime
+    }
+    const [timeSW, setTimeSW] = useState(inititalTimeSW() * 1000)
+    const [startSW, setStartSW] = useState(task.isWorkingNow)
     useEffect(() => {
+        console.log(task.id, task.isWorkingNow)
         let interval = null
         if (startSW) {
             interval = setInterval(() => {
