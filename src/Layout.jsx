@@ -11,7 +11,7 @@ const Layout = () => {
             <Header h="50px"/>
             <Flex marginTop="50px" minHeight="90vh">
                 <SideNavigation w="140px"/>
-                <Stack marginLeft={{xs: 0, md: "140px"}} p={1} bgcolor="bg.main" width="100%" height="95vh">
+                <Stack marginLeft={{xs: 0, md: "140px"}} p={1} bgcolor="bg.main" width="100%" height="calc(100vh - 50px)">
                     <Outlet/>
                 </Stack>
             </Flex>

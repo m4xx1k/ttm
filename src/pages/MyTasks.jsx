@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Dialog, Stack, Typography} from "@mui/material";
+import {Box, Dialog, Divider, Stack, Typography} from "@mui/material";
 import TaskForm from "../components/TaskForm";
 import {taskApi} from "../api/TaskApi";
 import Flex from "../ui/Flex";
@@ -22,7 +22,6 @@ const MyTasks = () => {
     }
 
 
-    const [columns, setColumns] = useState([])
     const {data: completeTasks, isSuccess: isSuccessCompleteTasks} = taskApi.useFetchTasksByStatusQuery("complete")
     const {data: todoTasks, isSuccess: isSuccessToDoTasks} = taskApi.useFetchTasksByStatusQuery("todo")
     const {
@@ -40,6 +39,9 @@ const MyTasks = () => {
 
     }, [isSuccessInprogressTasks, isSuccessToDoTasks, isSuccessCompleteTasks, todoTasks, inprogressTasks, completeTasks])
 
+     const [columns, setColumns] = useState([])
+
+
     const getTaskById = (id, status) => {
         let res
         columns.forEach(column => {
@@ -54,7 +56,7 @@ const MyTasks = () => {
     }
 
     const onDragEnd = async (res) => {
-        const taskId = res.source.index
+        const taskId = Number(res.draggableId)
         const task = getTaskById(taskId, res.source.droppableId)
         if (!!res.destination) {
 
@@ -67,23 +69,26 @@ const MyTasks = () => {
 
 
     return (
-        <Box>
+        <Box height="100%">
             <Flex justifyContent="space-between" marginX={2}>
                 <AddCircleIcon  cursor="pointer" color="primary" fontSize="large"
                                onClick={() => setOpenNewTaskForm(true)}/>
                 <Search openSearch={openSearch} setOpenSearch={setOpenSearch}/>
             </Flex>
 
+            <Divider sx={{margin:"6px 0"}}/>
+
             <Dialog
                 open={openNewTaskForm}
                 onClose={() => setOpenNewTaskForm(false)}
+                sx={{maxWidth:"auto"}}
             >
                 <TaskForm handleSubmit={handleAddNewTask}/>
             </Dialog>
 
             <DragDropContext onDragEnd={onDragEnd}>
                 <Flex justifyContent="space-between" gap={1}
-                      sx={{minHeight: "80vh", maxWidth: "100vw", overflowX: "scroll"}}>
+                      sx={{minHeight: "90vh", maxWidth: "100vw", overflowX: "scroll"}}>
                     {columns.map((column) => {
                         return (
                             <Droppable key={column.status} droppableId={column.status}>

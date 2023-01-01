@@ -19,6 +19,7 @@ const Search = ({openSearch, setOpenSearch}) => {
         }else{
             setSearchError("Too short request!")
         }
+        console.log("s")
     }
 
     return (
@@ -42,8 +43,7 @@ const Search = ({openSearch, setOpenSearch}) => {
                                 error={!!searchError.length}
                                 helperText={searchError}
                             />
-                            <SearchIcon cursor="pointer" type="submit" color="primary" fontSize="large"/>
-
+                            <SearchIcon onClick={handleSearch} cursor="pointer" type="submit" color="primary" fontSize="large"/>
 
                     </Flex>
                     <Stack overflowy="scroll">

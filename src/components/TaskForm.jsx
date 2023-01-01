@@ -91,7 +91,7 @@ const TaskForm = ({handleSubmit, values = initialValues,handleCloseDialog}) => {
     }
 
     return (
-        <Stack maxWidth={400} as="form" onSubmit={formik.handleSubmit} p={3} sx={{borderRadius: 10}} gap={2}
+        <Stack minWidth={{xs:"80vw",md: "40vw", lg:"30vw"}} as="form" onSubmit={formik.handleSubmit} p={3} sx={{borderRadius: 10}} gap={2}
                bgcolor="#fff">
             <TextField
                 id="title"

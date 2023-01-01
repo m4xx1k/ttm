@@ -3,7 +3,7 @@ import {Box} from "@mui/material";
 
 const Flex = (props) => {
     return (
-        <Box display="flex" {...props}>
+        <Box  display="flex" {...props}>
             {props.children}
         </Box>
     );

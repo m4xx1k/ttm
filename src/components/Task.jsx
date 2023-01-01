@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Card,
     Collapse,
@@ -28,8 +28,8 @@ import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 
 const statuses = ["todo", "inprogress", "complete"]
-const secToTime = (seconds) => {
-    let date = new Date(seconds * 1000);
+const secToTime = (ms) => {
+    let date = new Date(ms * 1000);
     let hh = date.getUTCHours();
     let mm = date.getUTCMinutes();
     let ss = date.getSeconds();
@@ -48,38 +48,64 @@ const secToTime = (seconds) => {
 
     return hh + ":" + mm + ":" + ss;
 }
-const Task = ({task, maxW=380}) => {
+const Task = ({task, maxW = 380}) => {
+    //SW --- stopwatch
+    const [timeSW, setTimeSW] = useState(task.spentTime * 1000)
+    const [startSW, setStartSW] = useState(false)
+    useEffect(() => {
+        let interval = null
+        if (startSW) {
+            interval = setInterval(() => {
+                setTimeSW(prevTime => prevTime + 1000)
+
+            }, 1000)
+        } else {
+            clearInterval(interval);
+        }
+        return () => clearInterval(interval)
+    }, [startSW])
 
     const [anchorEl, setAnchorEl] = useState(null);
     const openPopover = Boolean(anchorEl);
     const [openCollapse, setOpenCollapse] = useState(false)
+    const [openDialog, setOpenDialog] = useState(false)
+
     const [deleteTask] = taskApi.useDeleteTaskMutation()
     const handleDeleteTask = async (id) => await deleteTask(id)
     const [changeTask] = taskApi.useChangeTaskMutation()
-    const handleChangeTask = async (body) => {
-        await changeTask({id: task.id, body})
-    }
-    const [openDialog, setOpenDialog] = useState(false)
+    const handleChangeTask = async (body) => await changeTask({id: task.id, body})
 
 
-    const getClockColor = () => {
+    const clockColor = (() => {
         const now = dayjs()
         const ddl = dayjs(task.ddl)
-        const sec = ddl.diff(now, "seconds")
-        if(sec>86400) return "success"
-        if(sec>43200) return 'warning'
+        const sec = ddl.diff(now, "hours")
+        if (sec > 12) return "success"
+        if (sec > 6) return "warning"
         return "error"
-    }
-    const clockColor = getClockColor()
+    })()
+
+
     const handleStopWorking = async () => {
         const started = new Date(task.started)
         const newSpentTime = Math.abs((Date.now() - started.getTime()) / 1000)
+        setStartSW(false)
         await handleChangeTask({...task, isWorkingNow: false, spentTime: task.spentTime + newSpentTime})
     }
 
+    const handleStartWorking = async () => {
+        setStartSW(true)
+        await handleChangeTask({
+            ...task,
+            isWorkingNow: true,
+            started: Date.now()
+        })
+    }
+
+
     return (
         <Card className="task"
-              sx={{cursor: "initial", padding: 2, margin: "8px 0", minWidth: 200, maxWidth: maxW, borderRadius: 3}}
+              sx={{cursor: "initial", padding: 2, margin: "8px 0", minWidth: 240, maxWidth: maxW, borderRadius: 3}}
         >
             <Dialog
                 open={openDialog}
@@ -93,7 +119,7 @@ const Task = ({task, maxW=380}) => {
             <Flex justifyContent="space-between">
 
                 <Typography fontWeight="700" fontSize="20px" width="90%">
-                    {task.title}
+                    {task.title + task.id.toString()}
                 </Typography>
 
                 <MoreHorizIcon onClick={(e) => setAnchorEl(e.currentTarget)} cursor="pointer" width="10%"/>
@@ -129,11 +155,7 @@ const Task = ({task, maxW=380}) => {
                                         <Typography>Stop</Typography>
                                     </Flex>
                                     :
-                                    <Flex onClick={() => handleChangeTask({
-                                        ...task,
-                                        isWorkingNow: true,
-                                        started: Date.now()
-                                    })}>
+                                    <Flex onClick={() => handleStartWorking()}>
                                         <PlayCircleFilledWhiteIcon color="success"/>
                                         <Typography>Start</Typography>
                                     </Flex>
@@ -198,15 +220,15 @@ const Task = ({task, maxW=380}) => {
             </Flex>
 
             <Flex alignItems="center" justifyContent="space-between" color="grey" marginTop={1}>
-                <Flex>
-                    <AlarmIcon color={clockColor}/>
-                    <Typography>
+                <Flex alignItems="center">
+                    <AlarmIcon color={clockColor} fontSize="small"/>
+                    <Typography color="text.main" fontSize="0.875em">
                         {dayjs(task.ddl).format("DD MMM YYYY HH:mm")}
                     </Typography>
                 </Flex>
 
-                <Flex>
-                    <HourglassTopIcon color="primary" sx={
+                <Flex alignItems="center">
+                    <HourglassTopIcon fontSize="small" color="primary" sx={
                         task.isWorkingNow
                             ?
                             {
@@ -223,8 +245,8 @@ const Task = ({task, maxW=380}) => {
                             :
                             null
                     }/>
-                    <Typography>
-                        {secToTime(task.spentTime)}
+                    <Typography fontSize="14px">
+                        {secToTime(timeSW/1000)}
                     </Typography>
 
                 </Flex>

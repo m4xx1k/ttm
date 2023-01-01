@@ -1,23 +1,18 @@
 {
+  "user": {
+    "id": 78962,
+    "tasksIds": [
+      4,
+      6,
+      7
+    ],
+    "columns": [
+      "todo",
+      "inprogress",
+      "complete"
+    ]
+  },
   "tasks": [
-    {
-      "title": "the 35",
-      "ddl": "12.30.2022 16:23",
-      "desc": "the minimum time for the task is 15 minutes the minimum time for the task is 15 minutes",
-      "hashtags": [],
-      "microtasks": [],
-      "microtask": "",
-      "status": "inprogress",
-      "id": 3,
-      "order": 3,
-      "newht": {
-        "text": "",
-        "color": "#00ffff"
-      },
-      "isWorkingNow": false,
-      "spentTime": 10.27,
-      "started": 1672330562412
-    },
     {
       "title": "the 4",
       "ddl": "12.31.2022 16:23",
@@ -25,38 +20,20 @@
       "hashtags": [],
       "microtasks": [],
       "microtask": "",
-      "status": "complete",
-      "id": 4,
+      "status": "todo",
+      "id": 2,
       "order": 2,
       "newht": {
         "text": "",
         "color": "#00ffff"
       },
       "isWorkingNow": false,
-      "spentTime": 552.592,
-      "started": 1672175875453
-    },
-    {
-      "title": "the 1",
-      "ddl": "12.22.2022 16:23",
-      "desc": "the minimum time for the task is 15 minutes the minimum time for the task is 15 minutes",
-      "hashtags": [],
-      "microtasks": [],
-      "microtask": "",
-      "status": "todo",
-      "id": 6,
-      "order": 1,
-      "newht": {
-        "text": "",
-        "color": "#00ffff"
-      },
-      "isWorkingNow": false,
-      "spentTime": 821.362,
-      "started": 1672258714455
+      "spentTime": 0,
+      "started": 0
     },
     {
       "title": "MyTasks Page",
-      "ddl": "12.30.2022 18:00",
+      "ddl": "12.31.2022 23:58",
       "desc": "i need to finish MyTasks page for beta version. \nadd styles, add search, add time to deadline indicator",
       "hashtags": [
         {
@@ -96,11 +73,60 @@
         "color": "#00ffff"
       },
       "status": "inprogress",
-      "spentTime": 5353.741,
+      "spentTime": 55.55500000000001,
       "id": 7,
       "isWorkingNow": false,
-      "started": 1672259149844,
+      "started": 1672536536064,
       "order": 1
+    },
+    {
+      "title": "the minimum",
+      "ddl": "01.01.2023 13:50",
+      "desc": "the minimum time for the task is 15 minutes the minimum time for the task is 15 minutes",
+      "hashtags": [],
+      "microtasks": [],
+      "microtask": "",
+      "newht": {
+        "text": "",
+        "color": "#00ffff"
+      },
+      "status": "todo",
+      "spentTime": 0,
+      "id": 8
+    },
+    {
+      "title": "the minimum",
+      "ddl": "12.31.2022 15:40",
+      "desc": "the minimum time for the task is 15 minutes the minimum time for the task is 15 minutes",
+      "hashtags": [],
+      "microtasks": [],
+      "microtask": "",
+      "newht": {
+        "text": "",
+        "color": "#00ffff"
+      },
+      "status": "complete",
+      "spentTime": 18.887,
+      "id": 9,
+      "isWorkingNow": false,
+      "started": 1672535738527
+    },
+    {
+      "title": "the minimum",
+      "ddl": "01.01.2023 03:13",
+      "desc": "the minimum time for the task is 15 minutes the minimum time for the task is 15 minutes",
+      "hashtags": [],
+      "microtasks": [],
+      "microtask": "",
+      "newht": {
+        "text": "",
+        "color": "#00ffff"
+      },
+      "status": "complete",
+      "spentTime": 0,
+      "id": 10,
+      "isWorkingNow": false,
+      "started": 0
     }
   ]
 }
